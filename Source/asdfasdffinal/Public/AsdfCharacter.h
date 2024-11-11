@@ -30,7 +30,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void Landed(const FHitResult& Hit) override;
+
 	void MoveRight(float value);
+
+	void CheckJump();
+
+	bool bFirstJump;
+	bool bSecondJump;
+
 
 public:	
 	// Called every frame

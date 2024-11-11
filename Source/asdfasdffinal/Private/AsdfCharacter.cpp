@@ -26,6 +26,9 @@ AAsdfCharacter::AAsdfCharacter()
 
 	bUseControllerRotationYaw = false;
 
+	bFirstJump = true;
+	bSecondJump = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -43,7 +46,27 @@ void AAsdfCharacter::MoveRight(float value)
 	ControlRot.Yaw = 90.0f;
 
 	AddMovementInput(ControlRot.Vector(), value);
-//	AddMovementInput(GetActorRightVector(), value);
+}
+
+void AAsdfCharacter::CheckJump()
+{
+	if (bFirstJump)
+	{
+		bFirstJump = false;
+		Jump();
+	}
+	else if(bSecondJump)
+	{
+		bSecondJump = false;
+		LaunchCharacter(FVector(0.0f, 0.0f, 500.0f), false, true);
+	}
+}
+
+void AAsdfCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+	bFirstJump = true;
+	bSecondJump = true;
 }
 
 // Called every frame
@@ -59,6 +82,7 @@ void AAsdfCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAxis("MoveRight", this, &AAsdfCharacter::MoveRight);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AAsdfCharacter::CheckJump);
 
 }
 
