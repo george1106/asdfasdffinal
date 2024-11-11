@@ -5,6 +5,8 @@
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "DrawDebugHelpers.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AAsdfCharacter::AAsdfCharacter()
@@ -13,11 +15,16 @@ AAsdfCharacter::AAsdfCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SetupAttachment(RootComponent);
 
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	bUseControllerRotationYaw = false;
 
 }
 
@@ -30,7 +37,13 @@ void AAsdfCharacter::BeginPlay()
 
 void AAsdfCharacter::MoveRight(float value)
 {
-	AddMovementInput(GetActorRightVector(), value);
+	FRotator ControlRot = GetControlRotation();
+	ControlRot.Pitch = 0.0f;
+	ControlRot.Roll = 0.0f;
+	ControlRot.Yaw = 90.0f;
+
+	AddMovementInput(ControlRot.Vector(), value);
+//	AddMovementInput(GetActorRightVector(), value);
 }
 
 // Called every frame
