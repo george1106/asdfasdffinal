@@ -16,7 +16,7 @@ AAsdfCharacter::AAsdfCharacter()
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
 	SpringArmComp->bUsePawnControlRotation = true;
-	SpringArmComp->SetupAttachment(RootComponent);
+	SpringArmComp->SetupAttachment(GetMesh());
 
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
